@@ -18,7 +18,6 @@
     },
     "Mercedes_Benz.io_Challenge": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

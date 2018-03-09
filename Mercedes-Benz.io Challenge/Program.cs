@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Classes;
+using MercedesManager;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mercedes_Benz.io_Challenge
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) {
+            JObject json = JObject.Parse(File.ReadAllText("dataset.json"));
+            Dictionary<string, List<JObject>> jsonSerialized = json.ToObject<Dictionary<string, List<JObject>>>();
+            List<Dealer> dealers = jsonSerialized["dealers"].Select(x => x.ToObject<Dealer>()).ToList();
+            List<Booking> bookings = jsonSerialized["bookings"].Select(x => x.ToObject<Booking>()).ToList();
+            Manager.Init(dealers, bookings);
             BuildWebHost(args).Run();
         }
 
