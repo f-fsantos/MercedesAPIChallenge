@@ -81,7 +81,7 @@ namespace MercedesManager
         public static IEnumerable<Vehicle> GetVehiclesByParameter(string[][] input)
         {
             return _dealers
-                .Where(x => input?[3] == null || input[3].Contains(x.Name))
+                .Where(x => input?[3] == null || input[3].Contains(x.Name) || input[3].Contains(x.Id))
                 .Select(x => x.Vehicles)
                 .Select(y => y
                     .Where(z =>
@@ -93,7 +93,7 @@ namespace MercedesManager
         {
             return _dealers
                 .Where(z =>
-                        input?[3] == null || input[3].Contains(z.Name))
+                        input?[3] == null || input[3].Contains(z.Name) || input[3].Contains(z.Id))
                 .Where(z =>
                     z.Vehicles.Any(y =>
                     (input?[0] == null || input[0].Contains(y.Model)) &&
@@ -104,7 +104,7 @@ namespace MercedesManager
 
         public static IEnumerable<Dealer> FindDealersInsidePolygon(string[][] input, (double Latitude, double Longitude)[] coordinates) {
             return _dealers.Where(z => 
-            input?[3] == null || input[3].Contains(z.Name))
+            input?[3] == null || input[3].Contains(z.Name) || input[3].Contains(z.Id))
             .Where(z => z.Vehicles
                 .Any(y => 
                 (input?[0] == null || input[0].Contains(y.Model)) && 
