@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  mercedes-benz.iochallenge:
-    image: mercedes-benz.iochallenge
-    build:
-      context: .
-      dockerfile: Mercedes-Benz.io Challenge\Dockerfile
