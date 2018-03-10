@@ -5,6 +5,7 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <Authors>Frederico Santos</Authors>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

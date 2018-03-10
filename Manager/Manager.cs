@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Domain.Classes;
 
@@ -13,7 +12,7 @@ namespace MercedesManager
         private static ConcurrentBag<Dealer> _dealers = new ConcurrentBag<Dealer>();
 
         #region Initializer
-        public static void Init(List<Dealer> dealers, List<Booking> bookings)
+        public static void Init(IEnumerable<Dealer> dealers, IEnumerable<Booking> bookings)
         {
             _bookings = new ConcurrentBag<Booking>(bookings);
             _dealers = new ConcurrentBag<Dealer>(dealers);
@@ -37,7 +36,7 @@ namespace MercedesManager
         {
             try
             {
-                var matchedBooking = _bookings.FirstOrDefault(x => x.PickupDate == booking.PickupDate && x.VehicleId == booking.VehicleId && x.CancelledAt == null);
+                Booking matchedBooking = _bookings.FirstOrDefault(x => x.PickupDate == booking.PickupDate && x.VehicleId == booking.VehicleId && x.CancelledAt == null);
 
                 if (matchedBooking != null)
                     return "Duplicate";
@@ -81,7 +80,7 @@ namespace MercedesManager
         #region Business-Specific Functions
         public static IEnumerable<Vehicle> GetVehiclesByParameter(string[][] input)
         {
-            var result = _dealers
+            return _dealers
                 .Where(x => input?[3] == null || input[3].Contains(x.Name))
                 .Select(x => x.Vehicles)
                 .Select(y => y
@@ -89,7 +88,6 @@ namespace MercedesManager
                         (input?[0] == null || input[0].Contains(z.Model)) &&
                         (input?[1] == null || input[1].Contains(z.Fuel)) &&
                         (input?[2] == null || input[2].Contains(z.Transmission)))).SelectMany(x => x).ToList();
-            return (IEnumerable<Vehicle>)result;
         }
         public static IEnumerable<Dealer> FindDealersOrderedByDistance(string[][] input, (double Latitude, double Longitude) coordinates)
         {

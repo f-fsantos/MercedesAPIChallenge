@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using Domain.Classes;
 using MercedesManager;
 using Mercedes_Benz.io_Challenge.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace Mercedes_Benz.io_Challenge.Controllers
 {
     [Route("api/[controller]")]
     public class BookingsController : Controller
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        public JsonResult Get() {
+        [ProducesResponseType(typeof(List<Booking>), 200)]
+        public JsonResult Get()
+        {
             return new JsonResult(Manager.GetBookings()) { StatusCode = (int)HttpStatusCode.OK };
         }
         [Route("create")]
         [HttpPost]
-        public ActionResult Create([FromBody]Booking input) {
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public ActionResult Create([FromBody]Booking input)
+        {
 
             switch (Manager.AddBooking(input)) {
                 case "Duplicate":
@@ -37,7 +35,7 @@ namespace Mercedes_Benz.io_Challenge.Controllers
                 case "Unknown Error":
                     return StatusCode((int) HttpStatusCode.InternalServerError);
                 case "OK":
-                    return StatusCode((int)HttpStatusCode.OK);
+                    return StatusCode((int)HttpStatusCode.Created);
                 default:
                     return StatusCode((int)HttpStatusCode.InternalServerError);
             }
@@ -46,6 +44,8 @@ namespace Mercedes_Benz.io_Challenge.Controllers
 
         [Route("cancel")]
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(409)]
         public ActionResult Cancel([FromBody] CancelBookingViewModel input) {
             return Manager.CancelBooking(input.Id, input.CancelledAt, input.CancelledReason) ? 
                 StatusCode((int)HttpStatusCode.OK) : 
